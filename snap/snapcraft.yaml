@@ -10,7 +10,7 @@ description: |
 grade: stable
 confinement: strict
 icon: snap/gui/radiogo.png
-title: radio_GO
+title: RadioGO
 
 apps:
   radiogo:
