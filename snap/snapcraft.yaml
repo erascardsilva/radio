@@ -15,7 +15,7 @@ title: RadioGO
 apps:
   radiogo:
     command: bin/radiogo
-    extensions: [gnome-42-2204]
+    extensions: [gnome]
     environment:
       WEBKIT_DISABLE_SANDBOX: "1"
     plugs:
