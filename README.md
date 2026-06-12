@@ -1,6 +1,10 @@
 # radiogo - Modern Internet Radio & Local Media Player
 
+[![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/radiogo)
+
 **Author:** Erasmo Cardoso - Software Engineer | Electronics Technician
+
+❤️ **Support this project:** [Donate via PayPal](https://www.paypal.com/ncp/payment/8V6WQCGN6HDCQ)
 
 ## Overview
 
@@ -52,10 +56,18 @@ The compiled executable will be located in `build/bin/radiogo`.
 
 ## Download & Installation
 
-**radiogo** is officially published and available on the Snap Store. You can install it on any Linux distribution that supports Snaps by running:
+### Linux (Ubuntu, Debian, Fedora, Arch, etc.)
+**radiogo** is officially published and available on the **Snap Store**. You can install it securely on any Linux distribution that supports Snaps by running:
 
 ```bash
 sudo snap install radiogo
 ```
+*(Builds via Github Actions automatically publish new releases directly to the `stable` channel).*
 
-*(Builds via Github Actions automatically publish new tags directly to the `stable` channel).*
+### Windows (.exe) & Linux (.deb)
+If you prefer standalone installers instead of the Snap Store, you can download the compiled binaries directly from the **Releases** page of this repository.
+
+1. Go to the [Releases](https://github.com/erascardsilva/radio/releases) section.
+2. Download the appropriate file for your system:
+   - **Windows:** Download `radiogo-amd64-installer.exe` (Official NSIS Installer) or the portable `radiogo.exe`.
+   - **Debian/Ubuntu:** Download `radiogo_1.0.0_amd64.deb` and install it using `sudo dpkg -i radiogo_1.0.0_amd64.deb`.
