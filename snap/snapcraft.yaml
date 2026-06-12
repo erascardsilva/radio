@@ -15,11 +15,10 @@ title: RadioGO
 apps:
   radiogo:
     command: bin/radiogo
+    extensions: [gnome-42-2204]
+    environment:
+      WEBKIT_DISABLE_SANDBOX: "1"
     plugs:
-      - x11
-      - desktop
-      - desktop-legacy
-      - opengl
       - network
       - network-bind
       - audio-playback
