@@ -69,5 +69,5 @@ If you prefer standalone installers instead of the Snap Store, you can download 
 
 1. Go to the [Releases](https://github.com/erascardsilva/radio/releases) section.
 2. Download the appropriate file for your system:
-   - **Windows:** Download `radiogo-amd64-installer.exe` (Official NSIS Installer) or the portable `radiogo.exe`.
-   - **Debian/Ubuntu:** Download `radiogo_1.0.0_amd64.deb` and install it using `sudo dpkg -i radiogo_1.0.0_amd64.deb`.
+   - **Windows:** Download `radiogo-amd64-installer.exe` (Official NSIS Installer).
+   - **Debian/Ubuntu:** Download `radiogo-linux-amd64.deb` and install it using `sudo dpkg -i radiogo-linux-amd64.deb`.
