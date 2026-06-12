@@ -32,7 +32,7 @@ const i18n = {
         "placeholder_name": "Nome da Rádio",
         "placeholder_url": "URL do Stream",
         "btn_add": "Adicionar",
-        "modal_about_title": "Sobre o radio_GO",
+        "modal_about_title": "Sobre o radiogo",
         "about_text": "Este é um Media Center híbrido. Você pode escutar rádios do mundo todo, colar links de áudio do YouTube e também escutar suas músicas MP3 locais direto do seu computador.",
         "label_region": "Região",
         "label_station": "Estação",
@@ -43,7 +43,7 @@ const i18n = {
         "opt_local": "📁 Músicas Locais (MP3)",
         "opt_wait": "Aguardando",
         "opt_change_dir": "[ 🔄 Trocar Pasta de Músicas ]",
-        "app_name": "radio_GO"
+        "app_name": "radiogo"
     },
     "en": {
         "subtitle": "Tune in to your favorite stations",
@@ -60,7 +60,7 @@ const i18n = {
         "placeholder_name": "Radio Name",
         "placeholder_url": "Stream URL",
         "btn_add": "Add",
-        "modal_about_title": "About radio_GO",
+        "modal_about_title": "About radiogo",
         "about_text": "This is a hybrid Media Center. You can listen to radios from all over the world, paste YouTube audio links, and also listen to your local MP3 music straight from your computer.",
         "label_region": "Region",
         "label_station": "Station",
@@ -71,7 +71,7 @@ const i18n = {
         "opt_local": "📁 Local Music (MP3)",
         "opt_wait": "Waiting",
         "opt_change_dir": "[ 🔄 Change Music Folder ]",
-        "app_name": "radio_GO"
+        "app_name": "radiogo"
     }
 };
 

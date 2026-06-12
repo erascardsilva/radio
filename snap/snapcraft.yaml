@@ -1,0 +1,52 @@
+name: radiogo
+base: core22
+version: '1.0.0'
+summary: Um Media Center Híbrido. Rádios Globais, YouTube Streams e Músicas Locais.
+description: |
+  O radio_GO é um player de mídia moderno. Escute centenas de estações 
+  de rádio pelo mundo, transmita diretamente o áudio do YouTube via URL sem carregar vídeos, 
+  e escute toda sua biblioteca de Músicas MP3 diretamente do seu computador 
+  com um visual elegante e controle nativo de reprodução.
+grade: stable
+confinement: strict
+icon: snap/gui/radiogo.png
+title: radio_GO
+
+apps:
+  radiogo:
+    command: bin/radiogo
+    plugs:
+      - x11
+      - desktop
+      - desktop-legacy
+      - opengl
+      - network
+      - network-bind
+      - audio-playback
+      - home
+
+parts:
+  radiogo:
+    plugin: nil
+    source: .
+    build-packages:
+      - golang
+      - npm
+      - nodejs
+      - libgtk-3-dev
+      - libwebkit2gtk-4.0-dev
+    stage-packages:
+      - libwebkit2gtk-4.0-37
+      - libgtk-3-0
+    override-build: |
+      go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      export PATH=$PATH:$(go env GOPATH)/bin
+      
+      wails build
+      
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp build/bin/radiogo $SNAPCRAFT_PART_INSTALL/bin/
+      
+      mkdir -p $SNAPCRAFT_PART_INSTALL/gui
+      cp snap/gui/*.png $SNAPCRAFT_PART_INSTALL/gui/
+      cp snap/gui/*.desktop $SNAPCRAFT_PART_INSTALL/gui/
