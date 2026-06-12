@@ -18,11 +18,15 @@ apps:
     extensions: [gnome]
     environment:
       WEBKIT_DISABLE_SANDBOX: "1"
+      GTK_MODULES: ""
+      DISABLE_WAYLAND: "1"
+      WEBKIT_DISABLE_COMPOSITING_MODE: "1"
     plugs:
       - network
       - network-bind
       - audio-playback
       - home
+      - opengl
 
 parts:
   radiogo:
