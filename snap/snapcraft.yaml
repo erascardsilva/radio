@@ -29,10 +29,10 @@ parts:
   radiogo:
     plugin: nil
     source: .
+    build-snaps:
+      - go/1.23/stable
+      - node/20/stable
     build-packages:
-      - golang
-      - npm
-      - nodejs
       - libgtk-3-dev
       - libwebkit2gtk-4.0-dev
     stage-packages:
