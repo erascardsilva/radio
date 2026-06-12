@@ -1,4 +1,4 @@
-# Modern Internet Radio & Local Media Player
+# radiogo - Modern Internet Radio & Local Media Player
 
 **Author:** Erasmo Cardoso - Software Engineer | Electronics Technician
 
@@ -48,4 +48,14 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 wails build
 ```
 
-The compiled executable will be located in `build/bin/radio`.
+The compiled executable will be located in `build/bin/radiogo`.
+
+## Download & Installation
+
+**radiogo** is officially published and available on the Snap Store. You can install it on any Linux distribution that supports Snaps by running:
+
+```bash
+sudo snap install radiogo
+```
+
+*(Builds via Github Actions automatically publish new tags directly to the `stable` channel).*
