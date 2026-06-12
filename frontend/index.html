@@ -1,0 +1,139 @@
+<!-- Author: Erasmo Cardoso - Software Engineer | Electronics Technician -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>radio_GO</title>
+</head>
+<body>
+    <button id="lista-btn" class="top-left-btn" data-i18n="btn_lista">☰ Lista</button>
+    <button id="local-btn" class="top-left-btn" style="top: 60px;" data-i18n="btn_musicas">📁 Músicas</button>
+    <button id="apoie-btn" class="top-left-btn" style="top: 100px; color: #fbc531;" data-i18n="btn_apoie">☕ Apoie</button>
+    <button id="sobre-btn" class="top-left-btn" style="top: 140px;" data-i18n="btn_sobre">ℹ️ Sobre</button>
+    <button id="lang-btn" class="top-left-btn" style="top: 180px;">🌐 EN/PT</button>
+    
+    <div id="local-modal" class="hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 data-i18n="modal_music_title">Músicas Locais</h2>
+                <button id="select-dir-btn" class="btn-primary" data-i18n="btn_choose_folder">Escolher Pasta</button>
+            </div>
+            
+            <div id="local-music-list-container" class="radios-list-container">
+                <p style="text-align: center; color: var(--text-muted); margin-top: 20px;" data-i18n="no_folder">Nenhuma pasta selecionada ou vazia.</p>
+            </div>
+
+            <div class="modal-actions">
+                <button id="close-local-modal-btn" class="btn-secondary" data-i18n="btn_close">Fechar</button>
+            </div>
+        </div>
+    </div>
+    <div id="lista-modal" class="hidden">
+        <div class="modal-content">
+            <h2 data-i18n="modal_radio_title">Gerenciar Rádios</h2>
+            
+            <div class="add-radio-form">
+                <input type="text" id="new-country" placeholder="Região (Ex: Brasil)" class="styled-input" data-i18n-placeholder="placeholder_region">
+                <input type="text" id="new-name" placeholder="Nome da Rádio" class="styled-input" data-i18n-placeholder="placeholder_name">
+                <div style="display: flex; gap: 8px; flex: 1;">
+                    <input type="text" id="new-url" placeholder="URL do Stream" class="styled-input" data-i18n-placeholder="placeholder_url">
+                    <button id="paste-new-url-btn" style="background: var(--glass-border); color: #fff; border: none; padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Colar Link">📋</button>
+                </div>
+                <button id="add-radio-btn" class="btn-primary" data-i18n="btn_add">Adicionar</button>
+            </div>
+
+            <div id="radios-list-container"></div>
+
+            <div class="modal-actions">
+                <button id="close-modal-btn" class="btn-secondary" data-i18n="btn_close">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Sobre -->
+    <div id="sobre-modal" class="hidden">
+        <div class="modal-content" style="max-height: 400px; text-align: center;">
+            <h2 data-i18n="modal_about_title">Sobre o radio_GO</h2>
+            <p style="margin: 20px 0; line-height: 1.6; color: var(--text-main);" data-i18n="about_text">
+                Este é um Media Center híbrido. Você pode escutar rádios do mundo todo, colar links de áudio do YouTube e também escutar suas músicas MP3 locais direto do seu computador.
+            </p>
+            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p style="color: var(--primary); font-weight: bold; font-family: 'Orbitron', sans-serif;">
+                    Desenvolvido por:
+                </p>
+                <p style="margin-top: 10px; font-style: italic;">Erasmo Cardoso - Software Engineer | Electronics Technician</p>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button id="close-sobre-btn" class="btn-secondary" data-i18n="btn_close">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-background"></div>
+    <div id="app-overlay"></div>
+
+    <main class="glass-panel">
+        <header class="panel-header">
+            <h1 data-i18n="app_name">radio_GO</h1>
+            <p data-i18n="subtitle">Sintonize suas estações favoritas</p>
+        </header>
+
+        <!-- Áudio Oculto -->
+        <audio id="audio-player"></audio>
+
+        <section class="display-section">
+            <div class="lcd-glow"></div>
+            <div id="lcd-display">
+                <div class="lcd-content">
+                    <span id="lcd-freq">100.9</span>
+                    <span class="mhz">MHz</span>
+                </div>
+                <div id="lcd-station-name">Jovem Pan FM</div>
+            </div>
+            
+            <!-- Controles de Mídia -->
+            <div class="media-controls">
+                <button id="btn-prev" class="media-btn">⏮</button>
+                <button id="btn-playpause" class="media-btn">⏸</button>
+                <button id="btn-next" class="media-btn">⏭</button>
+            </div>
+        </section>
+
+        <section class="controls-section">
+            <div class="input-group">
+                <label for="country-select" data-i18n="label_region">Região</label>
+                <div class="select-wrapper">
+                    <select id="country-select"></select>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="station-select" data-i18n="label_station">Estação</label>
+                <div class="select-wrapper">
+                    <select id="station-select"></select>
+                </div>
+            </div>
+
+            <div class="input-group custom-stream-group">
+                <label for="custom-url" data-i18n="label_stream">Stream Manual (URL)</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="custom-url" placeholder="https://..." style="flex:1; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 8px; font-family: 'Inter', sans-serif;">
+                    <button id="paste-custom-btn" style="background: var(--glass-border); color: #fff; border: none; padding: 0 12px; border-radius: 8px; cursor: pointer;" title="Colar Link">📋</button>
+                    <button id="play-custom-btn" style="background: var(--primary); color: #fff; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: bold;" data-i18n="btn_play">Tocar</button>
+                </div>
+            </div>
+
+            <div class="volume-group">
+                <div class="volume-header">
+                    <label for="volume-slider" data-i18n="label_volume">Volume</label>
+                    <button id="mute-btn" class="icon-btn">🔊</button>
+                </div>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+            </div>
+        </section>
+    </main>
+
+    <script src="/src/main.js" type="module"></script>
+</body>
+</html>

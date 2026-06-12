@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Retro Radio</title>
+    <link rel="stylesheet" href="./style.css"/>
+</head>
+<body style="--wails-draggable:drag">
+    <div id="radio-container">
+        <!-- Áudio Oculto -->
+        <audio id="audio-player"></audio>
+
+        <!-- Display LCD -->
+        <div id="lcd-display">
+            <div id="lcd-freq">100.9</div>
+            <div id="lcd-station-name">Jovem Pan FM</div>
+        </div>
+
+        <!-- Controles Interativos (Sobrepostos à skin) -->
+        <div id="controls-panel" style="--wails-draggable:no-drag">
+            <div class="control-group">
+                <label>País</label>
+                <select id="country-select"></select>
+            </div>
+            
+            <div class="control-group">
+                <label>Rádio</label>
+                <select id="station-select"></select>
+            </div>
+
+            <div class="control-group">
+                <label>Volume</label>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+            </div>
+
+            <div class="control-group">
+                <button id="mute-btn">Mudo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+  {
+    "country": "Brasil",
+    "stations": [
+      { "name": "Jovem Pan FM SP", "url": "https://listen.jovempan.com.br/jpnewssp.m3u8", "freq": "100.9" },
+      { "name": "Antena 1", "url": "https://stream.antena1.com.br/stream3", "freq": "94.7" },
+      { "name": "Alpha FM", "url": "https://icecast.alpharadio.com.br/alpha", "freq": "101.7" },
+      { "name": "89 FM A Rádio Rock", "url": "https://r15.ciclano.io:15064/stream", "freq": "89.1" },
+      { "name": "CBN São Paulo", "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CBN_SP.mp3", "freq": "90.5" },
+      { "name": "Rádio Mix FM", "url": "https://stream.mixfm.com.br/mixfmsp", "freq": "106.3" },
+      { "name": "Metropolitana FM", "url": "https://icecast.metropolitanafm.com.br/metropolitana", "freq": "98.5" },
+      { "name": "Rádio Gaúcha", "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_GAUCHA.mp3", "freq": "93.7" }
+    ]
+  },
+  {
+    "country": "EUA",
+    "stations": [
+      { "name": "WNYC FM", "url": "https://fm939.wnyc.org/wnycfm-web", "freq": "93.9" },
+      { "name": "KEXP", "url": "https://kexp.streamguys1.com/kexp160.aac", "freq": "90.3" }
+    ]
+  }
+]
