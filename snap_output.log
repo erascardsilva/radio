@@ -1,0 +1,11 @@
+Gtk-Message: 13:46:52.774: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+
+** (radiogo:150258): WARNING **: 13:46:52.874: Could not open /sys/class/dmi/id/chassis_type: Falha ao abrir arquivo “/sys/class/dmi/id/chassis_type”: Permission denied
+
+** (radiogo:150258): WARNING **: 13:46:52.874: Could not open /sys/firmware/acpi/pm_profile: Falha ao abrir arquivo “/sys/firmware/acpi/pm_profile”: Permission denied
+Gtk-Message: 13:46:52.927: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+
+** (WebKitWebProcess:150357): WARNING **: 13:46:53.208: Could not open /sys/class/dmi/id/chassis_type: Falha ao abrir arquivo “/sys/class/dmi/id/chassis_type”: Permission denied
+
+** (WebKitWebProcess:150357): WARNING **: 13:46:53.208: Could not open /sys/firmware/acpi/pm_profile: Falha ao abrir arquivo “/sys/firmware/acpi/pm_profile”: Permission denied

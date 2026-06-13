@@ -19,6 +19,7 @@ func main() {
 	os.Setenv("WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "1")
 	os.Setenv("GIO_USE_PORTAL", "0")
 	os.Setenv("GIO_USE_NETWORK_MONITOR", "base")
+	os.Setenv("GST_DEBUG", "3")
 
 	// Create an instance of the app structure
 	app := NewApp()
