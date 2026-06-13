@@ -21,6 +21,14 @@ func main() {
 	os.Setenv("GIO_USE_NETWORK_MONITOR", "base")
 	os.Setenv("GST_DEBUG", "3")
 
+	// Força diretórios temporários para dentro da pasta do Snap, permitindo o downloadbuffer do GStreamer
+	snapData := os.Getenv("SNAP_USER_DATA")
+	if snapData != "" {
+		os.Setenv("TMPDIR", snapData)
+		os.Setenv("TMP", snapData)
+		os.Setenv("TEMP", snapData)
+	}
+
 	// Create an instance of the app structure
 	app := NewApp()
 
