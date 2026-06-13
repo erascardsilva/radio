@@ -58,18 +58,59 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+}
 
-	// Micro-servidor embutido para servir os MP3 locais
-	go func() {
-		http.HandleFunc("/local-audio/", func(w http.ResponseWriter, r *http.Request) {
+// proxyHandler intercepta chamadas de áudio e as processa no backend Go para burlar o sandbox do WebKit no Snap
+func (a *App) proxyHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Proxy de Streams da Internet
+		if strings.HasPrefix(r.URL.Path, "/stream") {
+			targetURL := r.URL.Query().Get("url")
+			if targetURL == "" {
+				http.Error(w, "missing url", http.StatusBadRequest)
+				return
+			}
+			
+			req, err := http.NewRequest("GET", targetURL, nil)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			req.Header.Set("User-Agent", "RetroRadioApp/1.0")
+			
+			// Repassa o header de Range (importante para media player buscar/tocar corretamente)
+			if rangeHeader := r.Header.Get("Range"); rangeHeader != "" {
+				req.Header.Set("Range", rangeHeader)
+			}
+
+			client := &http.Client{
+				Timeout: 10 * time.Second,
+			}
+			resp, err := client.Do(req)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadGateway)
+				return
+			}
+			defer resp.Body.Close()
+
+			for k, v := range resp.Header {
+				w.Header()[k] = v
+			}
+			w.WriteHeader(resp.StatusCode)
+			io.Copy(w, resp.Body)
+			return
+		}
+
+		// Arquivos Locais
+		if strings.HasPrefix(r.URL.Path, "/local-audio/") {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
-			// Remove o prefixo da URL para obter o caminho do arquivo
 			filePath := strings.TrimPrefix(r.URL.Path, "/local-audio/")
-			// Reconstrói o caminho absoluto do Linux (ex: /home/user/...)
 			http.ServeFile(w, r, "/"+filePath)
-		})
-		http.ListenAndServe("127.0.0.1:9099", nil)
-	}()
+			return
+		}
+
+		http.NotFound(w, r)
+	})
 }
 
 // GetCountries returns a list of available countries
@@ -267,7 +308,7 @@ func (a *App) ListLocalMusics(dir string) []Station {
 				displayName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
 				stations = append(stations, Station{
 					Name: displayName,
-					URL:  "http://127.0.0.1:9099/local-audio/" + cleanPath,
+					URL:  "/local-audio/" + cleanPath,
 					Freq: "LOCAL",
 				})
 			}

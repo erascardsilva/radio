@@ -499,7 +499,11 @@ async function playStation(station) {
     
     try {
         const finalUrl = await ResolveYouTubeAudio(station.url);
-        audioPlayer.src = finalUrl;
+        if (station.freq === "LOCAL") {
+            audioPlayer.src = finalUrl;
+        } else {
+            audioPlayer.src = "/stream?url=" + encodeURIComponent(finalUrl);
+        }
         await audioPlayer.play();
         lcdStationName.innerText = station.name;
     } catch(err) {
