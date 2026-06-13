@@ -24,8 +24,6 @@ apps:
       WEBKIT_DISABLE_COMPOSITING_MODE: "1"
       WEBKIT_DISABLE_DMABUF_RENDERER: "1"
       WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS: "1"
-      GIO_USE_PORTAL: "0"
-      GIO_USE_NETWORK_MONITOR: "base"
       GST_PLUGIN_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
       GST_PLUGIN_SYSTEM_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
       GST_PLUGIN_SCANNER: $SNAP/usr/libexec/gstreamer-1.0/gst-plugin-scanner
@@ -70,6 +68,7 @@ parts:
       - libgstreamer-gl1.0-0
       - libasound2-plugins
       - libpulse0
+      - mplayer
     override-build: |
       go install github.com/wailsapp/wails/v2/cmd/wails@latest
       export PATH=$PATH:$(go env GOPATH)/bin
