@@ -26,7 +26,7 @@ apps:
       WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS: "1"
       GST_PLUGIN_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
       GST_PLUGIN_SYSTEM_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
-      GST_PLUGIN_SCANNER: $SNAP/usr/libexec/gstreamer-1.0/gst-plugin-scanner
+      GST_PLUGIN_SCANNER: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
       ALSA_CONFIG_PATH: $SNAP/etc/asound.conf
     plugs:
       - home
@@ -82,6 +82,6 @@ parts:
       cp snap/gui/*.desktop $CRAFT_PART_INSTALL/gui/
       
       # Garantir permissao de execucao no scanner do GStreamer
-      if [ -f $CRAFT_PART_INSTALL/usr/libexec/gstreamer-1.0/gst-plugin-scanner ]; then
-        chmod +x $CRAFT_PART_INSTALL/usr/libexec/gstreamer-1.0/gst-plugin-scanner
+      if [ -f $CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner ]; then
+        chmod +x $CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
       fi
