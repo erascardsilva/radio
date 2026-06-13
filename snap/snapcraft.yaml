@@ -1,5 +1,5 @@
 name: radiogo
-base: core22
+base: core24
 version: '1.0.0'
 summary: Um Media Center Híbrido. Rádios Globais, YouTube Streams e Músicas Locais.
 description: |
@@ -12,21 +12,27 @@ confinement: strict
 icon: snap/gui/radiogo.png
 title: RadioGO
 
+platforms:
+  amd64:
+
 apps:
   radiogo:
     command: bin/radiogo
     extensions: [gnome]
     environment:
-      WEBKIT_DISABLE_SANDBOX: "1"
-      GTK_MODULES: ""
-      DISABLE_WAYLAND: "1"
+      LIBGL_ALWAYS_SOFTWARE: "1"
       WEBKIT_DISABLE_COMPOSITING_MODE: "1"
+      WEBKIT_DISABLE_DMABUF_RENDERER: "1"
     plugs:
-      - network
-      - network-bind
-      - audio-playback
       - home
+      - network
       - opengl
+      - wayland
+      - x11
+      - desktop
+      - desktop-legacy
+      - audio-playback
+      - network-bind
       - hardware-observe
 
 parts:
@@ -37,17 +43,18 @@ parts:
       - go/1.23/stable
       - node/20/stable
     build-packages:
+      - build-essential
       - libgtk-3-dev
-      - libwebkit2gtk-4.0-dev
+      - libwebkit2gtk-4.1-dev
     override-build: |
       go install github.com/wailsapp/wails/v2/cmd/wails@latest
       export PATH=$PATH:$(go env GOPATH)/bin
       
-      wails build
+      wails build -m -tags webkit2_41 -nsis=false -upx=false -trimpath -o radiogo
       
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      cp build/bin/radiogo $SNAPCRAFT_PART_INSTALL/bin/
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp build/bin/radiogo $CRAFT_PART_INSTALL/bin/
       
-      mkdir -p $SNAPCRAFT_PART_INSTALL/gui
-      cp snap/gui/*.png $SNAPCRAFT_PART_INSTALL/gui/
-      cp snap/gui/*.desktop $SNAPCRAFT_PART_INSTALL/gui/
+      mkdir -p $CRAFT_PART_INSTALL/gui
+      cp snap/gui/*.png $CRAFT_PART_INSTALL/gui/
+      cp snap/gui/*.desktop $CRAFT_PART_INSTALL/gui/
