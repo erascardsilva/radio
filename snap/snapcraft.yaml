@@ -24,9 +24,6 @@ apps:
       WEBKIT_DISABLE_COMPOSITING_MODE: "1"
       WEBKIT_DISABLE_DMABUF_RENDERER: "1"
       WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS: "1"
-      GST_PLUGIN_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
-      GST_PLUGIN_SYSTEM_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
-      GST_PLUGIN_SCANNER: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
       ALSA_CONFIG_PATH: $SNAP/etc/asound.conf
     plugs:
       - home
