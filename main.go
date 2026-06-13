@@ -13,6 +13,12 @@ import (
 var assets embed.FS
 
 func main() {
+	// IMPORTANTE: Força o WebKit e o GStreamer a ignorarem o sandbox e o portal DBus do GNOME.
+	// O Snap já bloqueia acesso perigoso, o sandbox interno do WebKit causa os erros de NotAllowed no GDBus.
+	os.Setenv("WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "1")
+	os.Setenv("GIO_USE_PORTAL", "0")
+	os.Setenv("GIO_USE_NETWORK_MONITOR", "base")
+
 	// Create an instance of the app structure
 	app := NewApp()
 

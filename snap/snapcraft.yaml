@@ -68,7 +68,6 @@ parts:
       - libgstreamer-gl1.0-0
       - libasound2-plugins
       - libpulse0
-      - mplayer
     override-build: |
       go install github.com/wailsapp/wails/v2/cmd/wails@latest
       export PATH=$PATH:$(go env GOPATH)/bin
