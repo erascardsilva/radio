@@ -23,8 +23,10 @@ apps:
       LIBGL_ALWAYS_SOFTWARE: "1"
       WEBKIT_DISABLE_COMPOSITING_MODE: "1"
       WEBKIT_DISABLE_DMABUF_RENDERER: "1"
-      GST_PLUGIN_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gstreamer-1.0
+      GST_PLUGIN_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
+      GST_PLUGIN_SYSTEM_PATH: $SNAP/usr/lib/x86_64-linux-gnu/gstreamer-1.0
       GST_PLUGIN_SCANNER: $SNAP/usr/libexec/gstreamer-1.0/gst-plugin-scanner
+      ALSA_CONFIG_PATH: $SNAP/etc/asound.conf
     plugs:
       - home
       - network
@@ -37,7 +39,14 @@ apps:
       - network-bind
 
 parts:
+  asound-conf:
+    plugin: dump
+    source: snap/local
+    organize:
+      asound.conf: etc/asound.conf
+
   radiogo:
+    after: [asound-conf]
     plugin: nil
     source: .
     build-snaps:
@@ -52,8 +61,12 @@ parts:
       - gstreamer1.0-plugins-base
       - gstreamer1.0-plugins-good
       - gstreamer1.0-plugins-bad
+      - gstreamer1.0-gl
       - gstreamer1.0-pulseaudio
       - libgstreamer-plugins-base1.0-0
+      - libgstreamer-gl1.0-0
+      - libasound2-plugins
+      - libpulse0
     override-build: |
       go install github.com/wailsapp/wails/v2/cmd/wails@latest
       export PATH=$PATH:$(go env GOPATH)/bin
@@ -66,3 +79,8 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/gui
       cp snap/gui/*.png $CRAFT_PART_INSTALL/gui/
       cp snap/gui/*.desktop $CRAFT_PART_INSTALL/gui/
+      
+      # Garantir permissao de execucao no scanner do GStreamer
+      if [ -f $CRAFT_PART_INSTALL/usr/libexec/gstreamer-1.0/gst-plugin-scanner ]; then
+        chmod +x $CRAFT_PART_INSTALL/usr/libexec/gstreamer-1.0/gst-plugin-scanner
+      fi
