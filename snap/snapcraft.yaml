@@ -77,8 +77,3 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/gui
       cp snap/gui/*.png $CRAFT_PART_INSTALL/gui/
       cp snap/gui/*.desktop $CRAFT_PART_INSTALL/gui/
-      
-      # Garantir permissao de execucao no scanner do GStreamer
-      if [ -f $CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner ]; then
-        chmod +x $CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
-      fi
