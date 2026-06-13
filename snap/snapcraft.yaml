@@ -35,6 +35,7 @@ apps:
       - desktop-legacy
       - audio-playback
       - network-bind
+      - network-status
 
 parts:
   asound-conf:
