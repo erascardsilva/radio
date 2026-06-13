@@ -78,3 +78,7 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/gui
       cp snap/gui/*.png $CRAFT_PART_INSTALL/gui/
       cp snap/gui/*.desktop $CRAFT_PART_INSTALL/gui/
+
+layout:
+  /var/tmp:
+    bind: $SNAP_USER_DATA

@@ -1,0 +1,3 @@
+layout:
+  /var/tmp:
+    bind: $SNAP_USER_DATA/tmp
