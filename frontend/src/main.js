@@ -1,6 +1,6 @@
 // Author: Erasmo Cardoso - Software Engineer | Electronics Technician
 import './style.css';
-import { GetCountries, GetStations, GetRawRadios, SaveRawRadios, ResolveYouTubeAudio, SelectMusicDirectory, GetSavedMusicDirectory, ListLocalMusics } from '../wailsjs/go/main/App.js';
+import { GetCountries, GetStations, GetRawRadios, SaveRawRadios, ResolveYouTubeAudio, SelectMusicDirectory, GetSavedMusicDirectory, ListLocalMusics, IsLinux, PlayAudio, StopAudio, PauseAudio, SetVolume } from '../wailsjs/go/main/App.js';
 import { BrowserOpenURL, ClipboardGetText } from '../wailsjs/runtime/runtime.js';
 
 let audioPlayer;
@@ -90,7 +90,10 @@ function translatePage() {
     loadCountries();
 }
 
+let isLinuxMode = false;
+
 document.addEventListener("DOMContentLoaded", async () => {
+    IsLinux().then(res => isLinuxMode = res);
     audioPlayer = document.getElementById("audio-player");
     countrySelect = document.getElementById("country-select");
     stationSelect = document.getElementById("station-select");
@@ -150,16 +153,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     let currentPlayingList = [];
     let currentPlayingIndex = -1;
 
+    let isPlaying = false;
+    
     btnPlayPause.addEventListener("click", () => {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
+        if (isLinuxMode) {
+            PauseAudio();
+            isPlaying = !isPlaying;
+            btnPlayPause.innerText = isPlaying ? "⏸" : "▶";
         } else {
-            audioPlayer.pause();
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
         }
     });
 
-    audioPlayer.addEventListener("play", () => btnPlayPause.innerText = "⏸");
-    audioPlayer.addEventListener("pause", () => btnPlayPause.innerText = "▶");
+    audioPlayer.addEventListener("play", () => { isPlaying = true; btnPlayPause.innerText = "⏸"; });
+    audioPlayer.addEventListener("pause", () => { isPlaying = false; btnPlayPause.innerText = "▶"; });
 
     function skipStation(direction) {
         if (!currentPlayingList || currentPlayingList.length === 0) return;
@@ -351,12 +362,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Configurar Volume Inicial
-    audioPlayer.volume = volumeSlider.value / 100;
-
+    const initialVol = volumeSlider.value;
+    audioPlayer.volume = initialVol / 100;
+    
     // Eventos
     volumeSlider.addEventListener("input", (e) => {
-        audioPlayer.volume = e.target.value / 100;
-        if(audioPlayer.muted && audioPlayer.volume > 0) {
+        const v = e.target.value;
+        if (isLinuxMode) {
+            SetVolume(parseInt(v));
+        } else {
+            audioPlayer.volume = v / 100;
+        }
+        if(audioPlayer.muted && v > 0) {
             audioPlayer.muted = false;
             muteBtn.innerText = "🔊";
         }
@@ -365,6 +382,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     muteBtn.addEventListener("click", () => {
         audioPlayer.muted = !audioPlayer.muted;
         muteBtn.innerText = audioPlayer.muted ? "🔇" : "🔊";
+        if (isLinuxMode) {
+            SetVolume(audioPlayer.muted ? 0 : parseInt(volumeSlider.value));
+        }
     });
 
     countrySelect.addEventListener("change", async (e) => {
@@ -471,7 +491,8 @@ async function loadStations(country) {
             stationSelect.innerHTML = '<option value="">Nenhuma pasta selecionada</option>';
             countrySelect.value = "";
         }
-        audioPlayer.pause();
+        if (isLinuxMode) StopAudio();
+        else audioPlayer.pause();
         return;
     }
 
@@ -487,7 +508,8 @@ async function loadStations(country) {
         
         lcdFreq.innerText = "---";
         lcdStationName.innerText = dict["opt_wait"];
-        audioPlayer.pause();
+        if (isLinuxMode) StopAudio();
+        else audioPlayer.pause();
     } catch (err) {
         console.error("Erro ao carregar rádios:", err);
     }
@@ -499,8 +521,15 @@ async function playStation(station) {
     
     try {
         const finalUrl = await ResolveYouTubeAudio(station.url);
-        audioPlayer.src = finalUrl;
-        await audioPlayer.play();
+        
+        if (isLinuxMode) {
+            PlayAudio(finalUrl);
+            isPlaying = true;
+            document.getElementById("btn-playpause").innerText = "⏸";
+        } else {
+            audioPlayer.src = finalUrl;
+            await audioPlayer.play();
+        }
         lcdStationName.innerText = station.name;
     } catch(err) {
         console.error("Erro ao reproduzir:", err);
