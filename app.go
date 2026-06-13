@@ -5,14 +5,11 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
-	goruntime "runtime"
 	"strings"
 	"time"
 
@@ -37,10 +34,8 @@ type Station struct {
 
 // App struct
 type App struct {
-	ctx      context.Context
-	data     []CountryData
-	mpvCmd   *exec.Cmd
-	mpvStdin io.WriteCloser
+	ctx  context.Context
+	data []CountryData
 }
 
 // NewApp creates a new App application struct
@@ -59,56 +54,22 @@ func NewApp() *App {
 	return &App{data: data}
 }
 
-// startup is called when the app starts
+// startup is called when the app starts. The context is saved
+// so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-}
 
-// IsLinux retorna true se o SO for Linux
-func (a *App) IsLinux() bool {
-	return goruntime.GOOS == "linux"
-}
-
-// PlayAudio inicia a reprodução nativa usando MPV (apenas no Linux/Snap)
-func (a *App) PlayAudio(streamURL string) {
-	if !a.IsLinux() {
-		return
-	}
-	
-	// Inicializa o processo do MPV se não estiver rodando
-	if a.mpvCmd == nil {
-		a.mpvCmd = exec.Command("mpv", "--idle", "--no-video", "--really-quiet")
-		stdin, err := a.mpvCmd.StdinPipe()
-		if err == nil {
-			a.mpvStdin = stdin
-			a.mpvCmd.Start()
-		}
-	}
-	
-	if a.mpvStdin != nil {
-		fmt.Fprintln(a.mpvStdin, "loadfile \""+streamURL+"\"")
-	}
-}
-
-// StopAudio para a reprodução no MPV
-func (a *App) StopAudio() {
-	if a.mpvStdin != nil {
-		fmt.Fprintln(a.mpvStdin, "stop")
-	}
-}
-
-// PauseAudio alterna o estado de pause do MPV
-func (a *App) PauseAudio() {
-	if a.mpvStdin != nil {
-		fmt.Fprintln(a.mpvStdin, "cycle pause")
-	}
-}
-
-// SetVolume altera o volume no MPV (0 a 100)
-func (a *App) SetVolume(vol int) {
-	if a.mpvStdin != nil {
-		fmt.Fprintln(a.mpvStdin, fmt.Sprintf("set volume %d", vol))
-	}
+	// Micro-servidor embutido para servir os MP3 locais
+	go func() {
+		http.HandleFunc("/local-audio/", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			// Remove o prefixo da URL para obter o caminho do arquivo
+			filePath := strings.TrimPrefix(r.URL.Path, "/local-audio/")
+			// Reconstrói o caminho absoluto do Linux (ex: /home/user/...)
+			http.ServeFile(w, r, "/"+filePath)
+		})
+		http.ListenAndServe("127.0.0.1:9099", nil)
+	}()
 }
 
 // GetCountries returns a list of available countries
@@ -301,11 +262,12 @@ func (a *App) ListLocalMusics(dir string) []Station {
 			ext := strings.ToLower(filepath.Ext(f.Name()))
 			if ext == ".mp3" || ext == ".wav" || ext == ".ogg" || ext == ".flac" || ext == ".m4a" {
 				absPath := filepath.Join(dir, f.Name())
+				cleanPath := strings.TrimPrefix(absPath, "/")
 				// Remove .mp3 from display name
 				displayName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
 				stations = append(stations, Station{
 					Name: displayName,
-					URL:  absPath,
+					URL:  "http://127.0.0.1:9099/local-audio/" + cleanPath,
 					Freq: "LOCAL",
 				})
 			}
