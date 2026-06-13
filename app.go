@@ -5,11 +5,14 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
+	goruntime "runtime"
 	"strings"
 	"time"
 
@@ -34,8 +37,10 @@ type Station struct {
 
 // App struct
 type App struct {
-	ctx  context.Context
-	data []CountryData
+	ctx      context.Context
+	data     []CountryData
+	mpvCmd   *exec.Cmd
+	mpvStdin io.WriteCloser
 }
 
 // NewApp creates a new App application struct
@@ -54,63 +59,56 @@ func NewApp() *App {
 	return &App{data: data}
 }
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
+// startup is called when the app starts
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// proxyHandler intercepta chamadas de áudio e as processa no backend Go para burlar o sandbox do WebKit no Snap
-func (a *App) proxyHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Proxy de Streams da Internet
-		if strings.HasPrefix(r.URL.Path, "/stream") {
-			targetURL := r.URL.Query().Get("url")
-			if targetURL == "" {
-				http.Error(w, "missing url", http.StatusBadRequest)
-				return
-			}
-			
-			req, err := http.NewRequest("GET", targetURL, nil)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			req.Header.Set("User-Agent", "RetroRadioApp/1.0")
-			
-			// Repassa o header de Range (importante para media player buscar/tocar corretamente)
-			if rangeHeader := r.Header.Get("Range"); rangeHeader != "" {
-				req.Header.Set("Range", rangeHeader)
-			}
+// IsLinux retorna true se o SO for Linux
+func (a *App) IsLinux() bool {
+	return goruntime.GOOS == "linux"
+}
 
-			client := &http.Client{
-				Timeout: 10 * time.Second,
-			}
-			resp, err := client.Do(req)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadGateway)
-				return
-			}
-			defer resp.Body.Close()
-
-			for k, v := range resp.Header {
-				w.Header()[k] = v
-			}
-			w.WriteHeader(resp.StatusCode)
-			io.Copy(w, resp.Body)
-			return
+// PlayAudio inicia a reprodução nativa usando MPV (apenas no Linux/Snap)
+func (a *App) PlayAudio(streamURL string) {
+	if !a.IsLinux() {
+		return
+	}
+	
+	// Inicializa o processo do MPV se não estiver rodando
+	if a.mpvCmd == nil {
+		a.mpvCmd = exec.Command("mpv", "--idle", "--no-video", "--really-quiet")
+		stdin, err := a.mpvCmd.StdinPipe()
+		if err == nil {
+			a.mpvStdin = stdin
+			a.mpvCmd.Start()
 		}
+	}
+	
+	if a.mpvStdin != nil {
+		fmt.Fprintln(a.mpvStdin, "loadfile \""+streamURL+"\"")
+	}
+}
 
-		// Arquivos Locais
-		if strings.HasPrefix(r.URL.Path, "/local-audio/") {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			filePath := strings.TrimPrefix(r.URL.Path, "/local-audio/")
-			http.ServeFile(w, r, "/"+filePath)
-			return
-		}
+// StopAudio para a reprodução no MPV
+func (a *App) StopAudio() {
+	if a.mpvStdin != nil {
+		fmt.Fprintln(a.mpvStdin, "stop")
+	}
+}
 
-		http.NotFound(w, r)
-	})
+// PauseAudio alterna o estado de pause do MPV
+func (a *App) PauseAudio() {
+	if a.mpvStdin != nil {
+		fmt.Fprintln(a.mpvStdin, "cycle pause")
+	}
+}
+
+// SetVolume altera o volume no MPV (0 a 100)
+func (a *App) SetVolume(vol int) {
+	if a.mpvStdin != nil {
+		fmt.Fprintln(a.mpvStdin, fmt.Sprintf("set volume %d", vol))
+	}
 }
 
 // GetCountries returns a list of available countries
@@ -303,12 +301,11 @@ func (a *App) ListLocalMusics(dir string) []Station {
 			ext := strings.ToLower(filepath.Ext(f.Name()))
 			if ext == ".mp3" || ext == ".wav" || ext == ".ogg" || ext == ".flac" || ext == ".m4a" {
 				absPath := filepath.Join(dir, f.Name())
-				cleanPath := strings.TrimPrefix(absPath, "/")
 				// Remove .mp3 from display name
 				displayName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
 				stations = append(stations, Station{
 					Name: displayName,
-					URL:  "/local-audio/" + cleanPath,
+					URL:  absPath,
 					Freq: "LOCAL",
 				})
 			}
