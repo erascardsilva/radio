@@ -1,0 +1,3 @@
+layout:
+  /var/tmp:
+    type: tmpfs
