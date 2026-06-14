@@ -10,20 +10,10 @@ export function GetSavedMusicDirectory():Promise<string>;
 
 export function GetStations(arg1:string):Promise<Array<main.Station>>;
 
-export function IsLinux():Promise<boolean>;
-
 export function ListLocalMusics(arg1:string):Promise<Array<main.Station>>;
-
-export function PauseAudio():Promise<void>;
-
-export function PlayAudio(arg1:string):Promise<void>;
 
 export function ResolveYouTubeAudio(arg1:string):Promise<string>;
 
 export function SaveRawRadios(arg1:string):Promise<void>;
 
 export function SelectMusicDirectory():Promise<string>;
-
-export function SetVolume(arg1:number):Promise<void>;
-
-export function StopAudio():Promise<void>;

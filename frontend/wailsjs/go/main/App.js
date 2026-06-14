@@ -18,20 +18,8 @@ export function GetStations(arg1) {
   return window['go']['main']['App']['GetStations'](arg1);
 }
 
-export function IsLinux() {
-  return window['go']['main']['App']['IsLinux']();
-}
-
 export function ListLocalMusics(arg1) {
   return window['go']['main']['App']['ListLocalMusics'](arg1);
-}
-
-export function PauseAudio() {
-  return window['go']['main']['App']['PauseAudio']();
-}
-
-export function PlayAudio(arg1) {
-  return window['go']['main']['App']['PlayAudio'](arg1);
 }
 
 export function ResolveYouTubeAudio(arg1) {
@@ -44,12 +32,4 @@ export function SaveRawRadios(arg1) {
 
 export function SelectMusicDirectory() {
   return window['go']['main']['App']['SelectMusicDirectory']();
-}
-
-export function SetVolume(arg1) {
-  return window['go']['main']['App']['SetVolume'](arg1);
-}
-
-export function StopAudio() {
-  return window['go']['main']['App']['StopAudio']();
 }

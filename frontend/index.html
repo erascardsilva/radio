@@ -9,9 +9,10 @@
 <body>
     <button id="lista-btn" class="top-left-btn" data-i18n="btn_lista">☰ Lista</button>
     <button id="local-btn" class="top-left-btn" style="top: 60px;" data-i18n="btn_musicas">📁 Músicas</button>
-    <button id="apoie-btn" class="top-left-btn" style="top: 100px; color: #fbc531;" data-i18n="btn_apoie">☕ Apoie</button>
-    <button id="sobre-btn" class="top-left-btn" style="top: 140px;" data-i18n="btn_sobre">ℹ️ Sobre</button>
-    <button id="lang-btn" class="top-left-btn" style="top: 180px;">🌐 EN/PT</button>
+    <button id="fav-btn" class="top-left-btn" style="top: 100px;" data-i18n="btn_favs">⭐ Favoritos</button>
+    <button id="apoie-btn" class="top-left-btn" style="top: 140px; color: #fbc531;" data-i18n="btn_apoie">☕ Apoie</button>
+    <button id="sobre-btn" class="top-left-btn" style="top: 180px;" data-i18n="btn_sobre">ℹ️ Sobre</button>
+    <button id="lang-btn" class="top-left-btn" style="top: 220px;">🌐 EN/PT</button>
     
     <div id="local-modal" class="hidden">
         <div class="modal-content">
@@ -47,6 +48,19 @@
 
             <div class="modal-actions">
                 <button id="close-modal-btn" class="btn-secondary" data-i18n="btn_close">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Favoritos -->
+    <div id="fav-modal" class="hidden">
+        <div class="modal-content">
+            <h2 data-i18n="modal_fav_title">Favoritos</h2>
+            <div id="fav-list-container" class="radios-list-container">
+                <p style="text-align: center; color: var(--text-muted); margin-top: 20px;">Nenhum favorito salvo.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="close-fav-btn" class="btn-secondary" data-i18n="btn_close">Fechar</button>
             </div>
         </div>
     </div>
@@ -89,7 +103,10 @@
                     <span id="lcd-freq">100.9</span>
                     <span class="mhz">MHz</span>
                 </div>
-                <div id="lcd-station-name">Jovem Pan FM</div>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <div id="lcd-station-name">Jovem Pan FM</div>
+                    <button id="btn-favorite" class="icon-btn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: rgba(255,255,255,0.3); padding: 0;" title="Favoritar">🤍</button>
+                </div>
             </div>
             
             <!-- Controles de Mídia -->

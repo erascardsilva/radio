@@ -307,7 +307,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background: rgba(255, 255, 255, 0.1);
 }
 
-#lista-modal, #local-modal, #sobre-modal {
+#lista-modal, #local-modal, #sobre-modal, #fav-modal {
     position: absolute;
     inset: 0;
     z-index: 200;
@@ -318,7 +318,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     align-items: center;
 }
 
-#lista-modal.hidden, #local-modal.hidden, #sobre-modal.hidden {
+#lista-modal.hidden, #local-modal.hidden, #sobre-modal.hidden, #fav-modal.hidden {
     display: none;
 }
 
@@ -359,7 +359,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     outline: none;
 }
 
-#radios-list-container, #local-music-list-container {
+#radios-list-container, #local-music-list-container, #fav-list-container {
     flex: 1;
     overflow-y: auto;
     background: #1f2937;

@@ -14,6 +14,8 @@ let lcdStationName;
 let currentStations = [];
 let localStations = [];
 let currentRadiosData = [];
+let currentPlayingStationData = null;
+let favoritesList = JSON.parse(localStorage.getItem("radiogo_favorites") || "[]");
 
 let currentLang = "pt";
 const i18n = {
@@ -21,9 +23,12 @@ const i18n = {
         "subtitle": "Sintonize suas estações favoritas",
         "btn_lista": "☰ Lista",
         "btn_musicas": "📁 Músicas",
+        "btn_favs": "⭐ Favoritos",
         "btn_apoie": "☕ Apoie",
         "btn_sobre": "ℹ️ Sobre",
         "modal_music_title": "Músicas Locais",
+        "modal_fav_title": "Favoritos",
+        "no_favorites": "Nenhum favorito salvo.",
         "btn_choose_folder": "Escolher Pasta",
         "no_folder": "Nenhuma pasta selecionada ou vazia.",
         "btn_close": "Fechar",
@@ -49,9 +54,12 @@ const i18n = {
         "subtitle": "Tune in to your favorite stations",
         "btn_lista": "☰ List",
         "btn_musicas": "📁 Music",
+        "btn_favs": "⭐ Favorites",
         "btn_apoie": "☕ Support",
         "btn_sobre": "ℹ️ About",
         "modal_music_title": "Local Music",
+        "modal_fav_title": "Favorites",
+        "no_favorites": "No saved favorites.",
         "btn_choose_folder": "Choose Folder",
         "no_folder": "No folder selected or empty.",
         "btn_close": "Close",
@@ -107,6 +115,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sobreModal = document.getElementById("sobre-modal");
     const closeSobreBtn = document.getElementById("close-sobre-btn");
     
+    const favBtn = document.getElementById("fav-btn");
+    const favModal = document.getElementById("fav-modal");
+    const closeFavBtn = document.getElementById("close-fav-btn");
+    const favListContainer = document.getElementById("fav-list-container");
+    const btnFavorite = document.getElementById("btn-favorite");
+    
     const langBtn = document.getElementById("lang-btn");
     const apoieBtn = document.getElementById("apoie-btn");
 
@@ -140,6 +154,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     closeSobreBtn.addEventListener("click", () => {
         sobreModal.classList.add("hidden");
+    });
+
+    favBtn.addEventListener("click", () => {
+        renderFavorites();
+        favModal.classList.remove("hidden");
+    });
+
+    closeFavBtn.addEventListener("click", () => {
+        favModal.classList.add("hidden");
+    });
+
+    btnFavorite.addEventListener("click", () => {
+        if (!currentPlayingStationData) return;
+        const isFav = favoritesList.some(f => f.url === currentPlayingStationData.url);
+        if (isFav) {
+            favoritesList = favoritesList.filter(f => f.url !== currentPlayingStationData.url);
+        } else {
+            favoritesList.push(currentPlayingStationData);
+        }
+        localStorage.setItem("radiogo_favorites", JSON.stringify(favoritesList));
+        updateFavoriteIcon();
+        renderFavorites();
     });
     
     // Controles de Mídia
@@ -494,6 +530,9 @@ async function loadStations(country) {
 }
 
 async function playStation(station) {
+    currentPlayingStationData = station;
+    updateFavoriteIcon();
+
     lcdFreq.innerText = station.freq || "WEB";
     lcdStationName.innerText = "Conectando...";
     
@@ -507,3 +546,66 @@ async function playStation(station) {
         lcdStationName.innerText = "Erro ao Tocar";
     }
 }
+
+function updateFavoriteIcon() {
+    const btnFavorite = document.getElementById("btn-favorite");
+    if (!btnFavorite) return;
+    if (!currentPlayingStationData) {
+        btnFavorite.innerText = "🤍";
+        btnFavorite.style.color = "rgba(255,255,255,0.3)";
+        return;
+    }
+    const isFav = favoritesList.some(f => f.url === currentPlayingStationData.url);
+    if (isFav) {
+        btnFavorite.innerText = "💛";
+        btnFavorite.style.color = "var(--primary)";
+        btnFavorite.style.opacity = "1";
+    } else {
+        btnFavorite.innerText = "🤍";
+        btnFavorite.style.color = "rgba(255,255,255,0.3)";
+        btnFavorite.style.opacity = "0.8";
+    }
+}
+
+function renderFavorites() {
+    const favListContainer = document.getElementById("fav-list-container");
+    if (!favListContainer) return;
+    
+    favListContainer.innerHTML = "";
+    
+    if (favoritesList.length === 0) {
+        const dict = i18n[currentLang];
+        favListContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); margin-top: 20px;" data-i18n="no_favorites">${dict["no_favorites"] || 'Nenhum favorito salvo.'}</p>`;
+        return;
+    }
+    
+    favoritesList.forEach(fav => {
+        const item = document.createElement("div");
+        item.className = "radio-item";
+        item.innerHTML = `
+            <div class="radio-info" style="flex: 1;">
+                <div class="radio-name">${fav.name}</div>
+                <div class="radio-freq">${fav.freq || 'WEB'}</div>
+            </div>
+            <div class="radio-actions" style="display: flex; gap: 8px;">
+                <button class="btn-primary play-fav-btn" style="padding: 4px 12px; font-size: 0.9rem;" title="Tocar">▶</button>
+                <button class="btn-secondary delete-fav-btn" style="padding: 4px 12px; font-size: 0.9rem;" title="Remover">🗑️</button>
+            </div>
+        `;
+        
+        item.querySelector(".play-fav-btn").addEventListener("click", () => {
+            playStation(fav);
+            document.getElementById("fav-modal").classList.add("hidden");
+        });
+        
+        item.querySelector(".delete-fav-btn").addEventListener("click", () => {
+            favoritesList = favoritesList.filter(f => f.url !== fav.url);
+            localStorage.setItem("radiogo_favorites", JSON.stringify(favoritesList));
+            renderFavorites();
+            updateFavoriteIcon();
+        });
+        
+        favListContainer.appendChild(item);
+    });
+}
+
