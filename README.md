@@ -65,9 +65,9 @@ sudo snap install radiogo
 ### Windows (.exe) & Linux (.deb / .rpm)
 If you prefer standalone installers instead of the Snap Store, you can download the compiled binaries directly from the `installers` directory of this repository.
 
-- **Windows:** [Download radiogo-amd64-installer.exe](./installers/radiogo-amd64-installer.exe) (Official NSIS Installer).
-- **Debian/Ubuntu:** [Download radiogo_1.0.0_amd64.deb](./installers/radiogo_1.0.0_amd64.deb) and install it using `sudo dpkg -i radiogo_1.0.0_amd64.deb`.
-- **Red Hat/Fedora:** [Download radiogo-1.0.0-1.x86_64.rpm](./installers/radiogo-1.0.0-1.x86_64.rpm) and install it using `sudo rpm -i radiogo-1.0.0-1.x86_64.rpm`.
+- **Windows:** [Download radiogo-amd64-installer.exe](./installers/radiogo-amd64-installer.exe?raw=true) (Official NSIS Installer).
+- **Debian/Ubuntu:** [Download radiogo_1.0.0_amd64.deb](./installers/radiogo_1.0.0_amd64.deb?raw=true) and install it using `sudo dpkg -i radiogo_1.0.0_amd64.deb`.
+- **Red Hat/Fedora:** [Download radiogo-1.0.0-1.x86_64.rpm](./installers/radiogo-1.0.0-1.x86_64.rpm?raw=true) and install it using `sudo rpm -i radiogo-1.0.0-1.x86_64.rpm`.
 
 
 <br>
