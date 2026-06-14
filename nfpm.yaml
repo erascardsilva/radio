@@ -1,0 +1,18 @@
+name: "radiogo"
+arch: "amd64"
+platform: "linux"
+version: "1.0.0"
+section: "default"
+priority: "extra"
+maintainer: "Erasmo Cardoso <erasmo@vmi-informatica.com.br>"
+description: "Um Media Center Híbrido. Rádios Globais, YouTube Streams e Músicas Locais."
+vendor: "Erasmo Cardoso"
+homepage: "https://github.com/erascardsilva/radio"
+license: "MIT"
+contents:
+  - src: ./build/bin/radiogo
+    dst: /usr/bin/radiogo
+  - src: ./snap/gui/radiogo.desktop
+    dst: /usr/share/applications/radiogo.desktop
+  - src: ./snap/gui/radiogo.png
+    dst: /usr/share/icons/hicolor/512x512/apps/radiogo.png

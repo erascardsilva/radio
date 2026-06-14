@@ -2,9 +2,7 @@
 
 [![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/radiogo)
 
-**Author:** Erasmo Cardoso - Software Engineer | Electronics Technician
 
-❤️ **Support this project:** [Donate via PayPal](https://www.paypal.com/ncp/payment/8V6WQCGN6HDCQ)
 
 ## Overview
 
@@ -64,10 +62,16 @@ sudo snap install radiogo
 ```
 *(Builds via Github Actions automatically publish new releases directly to the `stable` channel).*
 
-### Windows (.exe) & Linux (.deb)
-If you prefer standalone installers instead of the Snap Store, you can download the compiled binaries directly from the **Releases** page of this repository.
+### Windows (.exe) & Linux (.deb / .rpm)
+If you prefer standalone installers instead of the Snap Store, you can download the compiled binaries directly from the `installers` directory of this repository.
 
-1. Go to the [Releases](https://github.com/erascardsilva/radio/releases) section.
-2. Download the appropriate file for your system:
-   - **Windows:** Download `radiogo-amd64-installer.exe` (Official NSIS Installer).
-   - **Debian/Ubuntu:** Download `radiogo-linux-amd64.deb` and install it using `sudo dpkg -i radiogo-linux-amd64.deb`.
+- **Windows:** [Download radiogo-amd64-installer.exe](./installers/radiogo-amd64-installer.exe) (Official NSIS Installer).
+- **Debian/Ubuntu:** [Download radiogo_1.0.0_amd64.deb](./installers/radiogo_1.0.0_amd64.deb) and install it using `sudo dpkg -i radiogo_1.0.0_amd64.deb`.
+- **Red Hat/Fedora:** [Download radiogo-1.0.0-1.x86_64.rpm](./installers/radiogo-1.0.0-1.x86_64.rpm) and install it using `sudo rpm -i radiogo-1.0.0-1.x86_64.rpm`.
+
+
+<br>
+
+**Support this project:** [Donate via PayPal](https://www.paypal.com/ncp/payment/8V6WQCGN6HDCQ)
+
+**Author:**<br> Erasmo Cardoso <br>  Software Engineer | Electronics Technician

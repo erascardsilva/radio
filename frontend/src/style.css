@@ -18,11 +18,13 @@
 body {
     font-family: 'Inter', sans-serif;
     color: var(--text-main);
-    overflow: hidden;
-    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 40px 20px;
     background-color: #0f172a;
 }
 
@@ -47,6 +49,7 @@ body {
     position: relative;
     z-index: 10;
     width: 420px;
+    margin: auto;
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
